@@ -1,99 +1,130 @@
-import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useState } from 'react';
 import { Tape } from '../components/Tape';
 import { Card } from '../components/Card';
+import { cves, type CveEntry, type CveSeverity } from '../data/cves';
+import './Vulnerabilities.css';
 
 export const Vulnerabilities = () => {
-  const [boxState, setBoxState] = useState(false);
+  const [query, setQuery] = useState('');
+  const [severityFilter, setSeverityFilter] = useState<'ALL' | CveSeverity>('ALL');
 
-  const cves = [
-    { id: 'CVE-2026-31802', project: 'node-tar', cvss: '8.2 HIGH', desc: 'Path Traversal vulnerability in isaacs tar (node-tar) allowing unexpected arbitrary file overwrites via crafted drive-relative symlink targets.' },
-    { id: 'CVE-2026-29786', project: 'node-tar', cvss: '8.2 HIGH', desc: 'High-severity flaw allowing attackers to create hardlinks outside the extraction directory. Using specially crafted drive-relative links results in file overwrites.' },
-    { id: 'CVE-2026-25885', project: 'PolarLearn', cvss: '10.0 CRITICAL', desc: 'Critical authentication bypass in the WebSocket endpoint (wss://polarlearn.nl/api/v1/ws). Attackers can anonymously subscribe to chat groups and inject arbitrary messages.' },
-    { id: 'CVE-2026-25547', project: '@isaacs/brace-expansion', cvss: '9.2 CRITICAL', desc: 'Denial of Service (DoS) vulnerability triggered by unbounded and eager expansion of brace patterns, forcing exponential CPU/memory consumption.' },
-    { id: 'CVE-2026-25222', project: 'PolarLearn', cvss: '6.3 MEDIUM', desc: 'Timing Attack in the sign-in endpoint (Argon2 hashing difference), enabling username enumeration for unauthenticated attackers.' },
-    { id: 'CVE-2026-25221', project: 'PolarLearn', cvss: '2.3 LOW', desc: 'OAuth 2.0 flow flaw failing to implement the state parameter, allowing CSRF and victim account takeover during provider login.' },
-    { id: 'CVE-2026-25126', project: 'PolarLearn', cvss: '7.1 HIGH', desc: 'Vote API business logic bypass. Missing type validation on the direction field allowed arbitrary values to register as non-upvotes.' },
-    { id: 'CVE-2026-23745', project: 'node-tar', cvss: '8.2 HIGH', desc: 'Path Traversal and Arbitrary File Overwrite by bypassing extraction root using hardlinks and poisoned absolute symlinks when preservePaths is false.' }
-  ];
+  const normalizedQuery = query.trim().toLowerCase();
 
-  const getScoreColor = (cvss: string) => {
-    if (cvss.includes('CRITICAL')) return '#8c2f39';    // Dark Red
-    if (cvss.includes('HIGH')) return '#b27438';        // Orange/Brown
-    if (cvss.includes('MEDIUM')) return '#d6a04d';      // Gold/Yellow
-    return '#6b645b';                                   // Grey (LOW)
+  const filteredCves = cves.filter((entry) => {
+    const matchesSeverity = severityFilter === 'ALL' || entry.severity === severityFilter;
+    const matchesQuery =
+      normalizedQuery.length === 0 ||
+      `${entry.id} ${entry.project} ${entry.description} ${(entry.aliases ?? []).join(' ')}`.toLowerCase().includes(normalizedQuery);
+
+    return matchesSeverity && matchesQuery;
+  });
+
+  const renderSeverity = (entry: CveEntry) => {
+    const label = entry.score
+      ? `CVSS ${entry.score.toFixed(1)} ${entry.severity}`
+      : entry.severity;
+
+    return (
+      <span className={`vuln-severity ${entry.severity}`}>
+        {label}
+      </span>
+    );
   };
 
   return (
-    <section>
+    <section className="vuln-page">
       <Helmet>
         <title>Security Advisories - Joshua van Rijswijk</title>
         <meta name="description" content="A comprehensive chronological list of high-impact security vulnerabilities and CVEs identified by Joshua van Rijswijk." />
       </Helmet>
-      <h2 style={{ textAlign: 'center', marginBottom: '3rem', fontSize: '2rem' }}>Security Advisories</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '2.5rem' }}>
-        {cves.map((cve, i) => (
-          <Card key={cve.id} tiltAngle={i % 2 === 0 ? 0.3 : -0.3} delay={0.1 + (i * 0.1)} className="vuln-card">
-            <Tape position={i % 2 === 0 ? 'top-center' : 'corner-tr'} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px dashed var(--color-border)', paddingBottom: '0.8rem', marginBottom: '1rem' }}>
-              <h3 style={{ margin: 0, color: 'var(--color-text-main)', fontSize: '1.4rem' }}>{cve.id}</h3>
-              <span className="cardboard-label" style={{ backgroundColor: getScoreColor(cve.cvss), margin: 0, fontWeight: 'bold' }}>
-                CVSS: {cve.cvss}
-              </span>
+      <Card tiltAngle={0.15} delay={0.08}>
+        <Tape position="corner-tr" />
+        <div className="vuln-controls">
+          <input
+            className="vuln-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search by advisory ID, project, or description"
+            aria-label="Search advisories"
+          />
+
+          <div className="vuln-toolbar">
+            <div className="vuln-filter-group" aria-label="Filter by severity">
+              {(['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={`vuln-filter ${severityFilter === option ? 'is-active' : ''}`}
+                  onClick={() => setSeverityFilter(option)}
+                >
+                  {option}
+                </button>
+              ))}
             </div>
-            
-            <p style={{ margin: '0 0 1rem 0', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              Project: <span style={{ backgroundColor: 'var(--color-bg-base)', padding: '0.2rem 0.5rem', border: '1px solid var(--color-border)', borderRadius: '2px' }}>{cve.project}</span>
-            </p>
-            
-            <p style={{ margin: '0 0 1.5rem 0', lineHeight: 1.7, color: 'var(--color-text-muted)' }}>
-              <strong>Description:</strong> {cve.desc}
-            </p>
-            
-            <a 
-              href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} 
-              target="_blank" 
-              rel="noreferrer"
-              className="btn-cardboard"
-              style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}
+          </div>
+
+          <div className="vuln-results">
+            Showing {filteredCves.length} of {cves.length} advisories.
+          </div>
+        </div>
+      </Card>
+
+      <div className="vuln-list">
+        {filteredCves.length > 0 ? (
+          filteredCves.map((entry, index) => (
+            <Card
+              key={entry.id}
+              tiltAngle={index % 2 === 0 ? 0.2 : -0.2}
+              delay={0.12 + index * 0.04}
+              className="vuln-card"
             >
-              NIST NVD Record →
-            </a>
+              <Tape position={index % 2 === 0 ? 'corner-tl' : 'corner-tr'} />
+              <div className="vuln-card-header">
+                <div className="vuln-card-title">
+                  <h3>{entry.id}</h3>
+                  <span className="vuln-project">{entry.project}</span>
+                  {entry.aliases?.length ? (
+                    <span className="vuln-aliases">{entry.aliases.join(' / ')}</span>
+                  ) : null}
+                </div>
+                {renderSeverity(entry)}
+              </div>
+
+              <p className="vuln-description">{entry.description}</p>
+
+              <div className="vuln-actions">
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-cardboard"
+                >
+                  {entry.urlLabel}
+                </a>
+              </div>
+            </Card>
+          ))
+        ) : (
+          <Card tiltAngle={0} delay={0.12}>
+            <div className="vuln-empty">
+              No advisories match the current filters. Try clearing the search or switching severity/project filters.
+            </div>
           </Card>
-        ))}
+        )}
       </div>
 
-      {/* Interactive Easter Egg */}
-      <div 
-        onClick={() => setBoxState(true)}
-        style={{
-          marginTop: '6rem',
-          textAlign: 'center',
-          cursor: boxState ? 'default' : 'pointer',
-          opacity: boxState ? 1 : 0.15,
-          transition: 'all 0.5s',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-        className={boxState ? '' : 'hover-opacity-1'}
-      >
-        <style>{`
-          .hover-opacity-1:hover { opacity: 0.8 !important; }
-        `}</style>
-        <pre style={{ fontSize: '0.8rem', lineHeight: '1.2', display: 'inline-block', textAlign: 'left', margin: 0, fontWeight: 'bold' }}>
-{boxState ? `  🎉 
- /  \\ 
-|0DAY|
- \\__/ ` : `  📦 
- /  \\ 
-| ?? |
- \\__/ `}
-        </pre>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: boxState ? 'var(--color-text-highlight)' : 'inherit', fontWeight: boxState ? 'bold' : 'normal' }}>
-          {boxState ? 'You found the 0-day stash! (Just kidding)' : 'Click to open...'}
-        </p>
-      </div>
+      <Card tiltAngle={-0.15} delay={0.18} className="vuln-easter-egg">
+        <Tape position="top-center" />
+        <div className="vuln-archive-note">
+          <span className="vuln-egg-label">Archive Note</span>
+          <p className="vuln-egg-text">
+            Dear traveler, if you made it this far into the archive, thanks for reading.
+            More findings will find their way onto these shelves soon enough.
+          </p>
+        </div>
+      </Card>
     </section>
   );
 };

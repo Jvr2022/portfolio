@@ -20,6 +20,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-dark) var(--color-bg-base);
+}
+
 ::selection {
   background-color: var(--color-text-highlight);
   color: var(--color-bg-base);
@@ -30,18 +35,18 @@
   color: var(--color-bg-base);
 }
 
-::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: 14px;
 }
-::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track {
   background: var(--color-bg-base);
   border-left: 2px dashed var(--color-border);
 }
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
   background: var(--color-bg-dark);
   border: 2px solid var(--color-border);
 }
-::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover {
   background: var(--color-border);
 }
 
