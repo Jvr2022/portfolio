@@ -1,0 +1,51 @@
+/* ─────────────────────────────────────────────────────────────
+   theme.css — Color tokens & dark mode overrides.
+   Edit these variables to re-skin the entire site.
+   ───────────────────────────────────────────────────────────── */
+
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --color-bg-base: #f5eedc;
+  --color-bg-card: #eaddcf;
+  --color-bg-dark: #c2b280;
+  --color-bg-tape: #e8dcc4;
+
+  --color-text-main: #3d3b38;
+  --color-text-muted: #6b645b;
+  --color-text-highlight: #8c553d;
+
+  --color-border: #a89f91;
+
+  --shadow-offset: 4px;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-bg-base: #1a1816;
+  --color-bg-card: #252220;
+  --color-bg-dark: #3a3530;
+  --color-bg-tape: #302c28;
+
+  --color-text-main: #d4cec4;
+  --color-text-muted: #8a8378;
+  --color-text-highlight: #c4795e;
+
+  --color-border: #4a443e;
+
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .cardboard-label {
+  background-color: #d4cec4;
+  color: #1a1816;
+}
+
+[data-theme="dark"] .profile-pic {
+  filter: sepia(0.15) contrast(1.05) brightness(0.85);
+}
+
+[data-theme="dark"] .profile-pic:hover {
+  filter: brightness(0.95);
+}

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useInView } from '../hooks/useInView';
 
 type CardProps = {
   children: ReactNode;
@@ -8,12 +9,15 @@ type CardProps = {
 };
 
 export const Card = ({ children, className = '', tiltAngle = 0, delay = 0 }: CardProps) => {
+  const { ref, isVisible } = useInView(0.1);
+
   return (
     <div 
-      className={`cardboard-box ${className}`} 
+      ref={ref}
+      className={`cardboard-box ${isVisible ? 'card-visible' : 'card-hidden'} ${className}`} 
       style={{ 
-        transform: tiltAngle ? `rotate(${tiltAngle}deg)` : 'none',
-        animation: `dropIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}s backwards`
+        transform: tiltAngle && isVisible ? `rotate(${tiltAngle}deg)` : 'none',
+        transitionDelay: `${delay}s`
       }}
     >
       {children}

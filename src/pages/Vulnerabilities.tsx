@@ -3,11 +3,35 @@ import { useState } from 'react';
 import { Tape } from '../components/Tape';
 import { Card } from '../components/Card';
 import { cves, type CveEntry, type CveSeverity } from '../data/cves';
-import './Vulnerabilities.css';
+import { meta } from '../config/site';
+
+type SortOption = 'default' | 'severity-desc' | 'severity-asc' | 'project';
+
+const severityOrder: Record<CveSeverity, number> = {
+  CRITICAL: 4,
+  HIGH: 3,
+  MEDIUM: 2,
+  LOW: 1,
+};
+
+function sortCves(list: CveEntry[], sort: SortOption): CveEntry[] {
+  const sorted = [...list];
+  switch (sort) {
+    case 'severity-desc':
+      return sorted.sort((a, b) => severityOrder[b.severity] - severityOrder[a.severity] || (b.score ?? 0) - (a.score ?? 0));
+    case 'severity-asc':
+      return sorted.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity] || (a.score ?? 0) - (b.score ?? 0));
+    case 'project':
+      return sorted.sort((a, b) => a.project.localeCompare(b.project));
+    default:
+      return sorted;
+  }
+}
 
 export const Vulnerabilities = () => {
   const [query, setQuery] = useState('');
   const [severityFilter, setSeverityFilter] = useState<'ALL' | CveSeverity>('ALL');
+  const [sortBy, setSortBy] = useState<SortOption>('default');
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -19,6 +43,8 @@ export const Vulnerabilities = () => {
 
     return matchesSeverity && matchesQuery;
   });
+
+  const sortedCves = sortCves(filteredCves, sortBy);
 
   const renderSeverity = (entry: CveEntry) => {
     const label = entry.score
@@ -35,8 +61,8 @@ export const Vulnerabilities = () => {
   return (
     <section className="vuln-page">
       <Helmet>
-        <title>Security Advisories - Joshua van Rijswijk</title>
-        <meta name="description" content="A comprehensive chronological list of high-impact security vulnerabilities and CVEs identified by Joshua van Rijswijk." />
+        <title>{meta.vulnsTitle}</title>
+        <meta name="description" content={meta.vulnsDescription} />
       </Helmet>
       <Card tiltAngle={0.15} delay={0.08}>
         <Tape position="corner-tr" />
@@ -63,21 +89,33 @@ export const Vulnerabilities = () => {
                 </button>
               ))}
             </div>
+
+            <select
+              className="vuln-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              aria-label="Sort advisories"
+            >
+              <option value="default">Default order</option>
+              <option value="severity-desc">Severity ↓</option>
+              <option value="severity-asc">Severity ↑</option>
+              <option value="project">Project A–Z</option>
+            </select>
           </div>
 
           <div className="vuln-results">
-            Showing {filteredCves.length} of {cves.length} advisories.
+            Showing {sortedCves.length} of {cves.length} advisories.
           </div>
         </div>
       </Card>
 
       <div className="vuln-list">
-        {filteredCves.length > 0 ? (
-          filteredCves.map((entry, index) => (
+        {sortedCves.length > 0 ? (
+          sortedCves.map((entry, index) => (
             <Card
               key={entry.id}
               tiltAngle={index % 2 === 0 ? 0.2 : -0.2}
-              delay={0.12 + index * 0.04}
+              delay={0.04 + index * 0.02}
               className="vuln-card"
             >
               <Tape position={index % 2 === 0 ? 'corner-tl' : 'corner-tr'} />

@@ -1,22 +1,8 @@
 import { Card } from './Card';
 import { Tape } from './Tape';
+import { techStack } from '../config/site';
 
 export const TechStack = () => {
-  const categories = [
-    {
-      title: 'Languages',
-      items: ['Python', 'JavaScript', 'TypeScript', 'Java', 'Kotlin', 'C#', 'Lua', 'HTML5', 'CSS3']
-    },
-    {
-      title: 'Security & Infrastructure',
-      items: ['Kali Linux', 'Android Security', 'Bash', 'Wireshark', 'Metasploit', 'Linux', 'Git', 'Docker']
-    },
-    {
-      title: 'Frameworks & Tools',
-      items: ['Node.js', 'Unity']
-    }
-  ];
-
   return (
     <section>
       <Card tiltAngle={0.5} delay={0.3}>
@@ -24,7 +10,7 @@ export const TechStack = () => {
         <span className="cardboard-label">Technical Stack</span>
         
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {categories.map((cat, idx) => (
+          {techStack.map((cat, idx) => (
             <div key={idx}>
               <h4 style={{ marginBottom: '0.5rem', color: 'var(--color-text-main)' }}>{cat.title}</h4>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>

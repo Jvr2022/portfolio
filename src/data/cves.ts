@@ -15,6 +15,43 @@ export type CveEntry = {
 
 export const cves: CveEntry[] = [
   {
+    id: 'GHSA-33r3-4whc-44c2',
+    project: 'vite-plus',
+    score: 8.4,
+    severity: 'HIGH',
+    cvssVersion: '4.0',
+    cvssVector: 'CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:H/SC:N/SI:H/SA:H',
+    description:
+      'Path traversal in vite-plus/binding downloadPackageManager() writes outside VP_HOME allowing an attacker to delete, replace, and populate directories outside the intended cache location.',
+    url: 'https://github.com/advisories/GHSA-33r3-4whc-44c2',
+    urlLabel: 'Open GitHub Advisory',
+  },
+  {
+    id: 'CVE-2026-40481',
+    project: 'monetr',
+    score: 8.2,
+    severity: 'HIGH',
+    cvssVersion: '4.0',
+    cvssVector: 'CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N',
+    description:
+      'In monetr, unauthenticated Stripe webhook reads attacker-sized request bodies before signature validation, leading to uncontrolled resource consumption (DoS).',
+    aliases: ['GHSA-v7xq-3wx6-fqc2'],
+    url: 'https://nvd.nist.gov/vuln/detail/CVE-2026-40481',
+    urlLabel: 'Open NVD Record',
+  },
+  {
+    id: 'GHSA-x7mm-9vvv-64w8',
+    project: 'unhead',
+    score: 2.3,
+    severity: 'LOW',
+    cvssVersion: '4.0',
+    cvssVector: 'CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:L/VA:N/SC:L/SI:L/SA:N',
+    description:
+      'Streaming SSR `streamKey` injected into inline script without identifier validation, resulting in a potential cross-site scripting (XSS) vulnerability.',
+    url: 'https://github.com/advisories/GHSA-x7mm-9vvv-64w8',
+    urlLabel: 'Open GitHub Advisory',
+  },
+  {
     id: 'CVE-2026-35525',
     project: 'liquidjs',
     score: 8.2,

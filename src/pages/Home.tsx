@@ -4,13 +4,14 @@ import { About } from '../components/About';
 import { TechStack } from '../components/TechStack';
 import { HallOfFame } from '../components/HallOfFame';
 import { Helmet } from 'react-helmet-async';
+import { meta } from '../config/site';
 
 export const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Joshua van Rijswijk - Security Researcher</title>
-        <meta name="description" content="Welcome to the portfolio of Joshua van Rijswijk (Jvr2022). Explore my cybersecurity research, tech stack, and professional exploit development experience." />
+        <title>{meta.homeTitle}</title>
+        <meta name="description" content={meta.homeDescription} />
       </Helmet>
       <Hero />
       <CveShortcut />

@@ -1,0 +1,210 @@
+/* ─────────────────────────────────────────────────────────────
+   components.css — Reusable component styles.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Layout ─────────────────────────────────────────────── */
+
+.cardboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+
+.cardboard-box {
+  background-color: var(--color-bg-card);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-color);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
+}
+
+.cardboard-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px var(--shadow-color);
+}
+
+/* Scroll-triggered card animations */
+.card-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.card-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card-visible:hover {
+  transform: translate(-2px, -2px);
+}
+
+/* ── Tape ────────────────────────────────────────────────── */
+
+.cardboard-tape {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 100px;
+  height: 30px;
+  background-color: var(--color-bg-tape);
+  opacity: 0.8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.cardboard-tape.corner-tr {
+  left: auto;
+  right: -20px;
+  top: -10px;
+  transform: rotate(45deg);
+}
+
+.cardboard-tape.corner-tl {
+  left: -20px;
+  top: -10px;
+  transform: translateX(0) rotate(-45deg);
+}
+
+/* ── Label ───────────────────────────────────────────────── */
+
+.cardboard-label {
+  display: inline-block;
+  background-color: #3d3b38;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn-cardboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-bg-dark);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-main);
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--shadow-color);
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.btn-cardboard:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--shadow-color);
+  text-decoration: none;
+}
+
+.btn-cardboard:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--shadow-color);
+}
+
+/* ── Profile picture ─────────────────────────────────────── */
+
+.profile-pic {
+  width: 140px;
+  height: 140px;
+  border-radius: 4px;
+  border: 4px solid var(--color-bg-base);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.1);
+  filter: sepia(0.3) contrast(1.1) brightness(0.95);
+  transform: rotate(-3deg);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+  object-fit: cover;
+  background-color: var(--color-bg-base);
+}
+
+.profile-pic:hover {
+  transform: rotate(2deg) scale(1.05);
+  filter: none;
+}
+
+/* ── Theme toggle ────────────────────────────────────────── */
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  border: 2px solid var(--color-border);
+  background-color: var(--color-bg-card);
+  color: var(--color-text-main);
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--shadow-color);
+  transition: transform 0.15s, box-shadow 0.15s, background-color 0.3s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--shadow-color);
+}
+
+.theme-toggle:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--shadow-color);
+}
+
+/* ── Back to top ─────────────────────────────────────────── */
+
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  border: 2px solid var(--color-border);
+  background-color: var(--color-bg-card);
+  color: var(--color-text-main);
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--shadow-color);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s, visibility 0.3s, background-color 0.3s;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--shadow-color);
+}
+
+.back-to-top:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--shadow-color);
+}

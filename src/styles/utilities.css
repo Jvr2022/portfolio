@@ -1,0 +1,59 @@
+/* ─────────────────────────────────────────────────────────────
+   utilities.css — Flex, grid helpers & responsive overrides.
+   ───────────────────────────────────────────────────────────── */
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gap-sm { gap: 0.5rem; }
+.gap-md { gap: 1rem; }
+.gap-lg { gap: 2rem; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .cardboard-container {
+    padding: 1rem;
+  }
+
+  .cardboard-box {
+    padding: 1rem;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-flex {
+    flex-direction: column-reverse !important;
+    text-align: center;
+    gap: 1.5rem !important;
+  }
+
+  .hero-flex .profile-pic {
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  .flex-center {
+    justify-content: center !important;
+  }
+}

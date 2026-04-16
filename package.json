@@ -1,8 +1,9 @@
 {
-  "name": "website",
+  "name": "cardboard-portfolio",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A minimal, highly customizable portfolio template for security researchers and developers.",
+  "author": "Joshua van Rijswijk",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
