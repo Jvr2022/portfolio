@@ -26,6 +26,7 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Home />} />
           <Route path="/vulns" element={<Vulnerabilities />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
